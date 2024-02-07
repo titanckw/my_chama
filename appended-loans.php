@@ -3,7 +3,7 @@
 session_set_cookie_params(0);
 session_start();
 include('includes/config.php');
-if (strlen($_SESSION['alogin']) == 0) {
+if (strlen($_SESSION['login']) == 0) {
     header('location: login.php');
 } else {
     ?>
@@ -20,6 +20,18 @@ if (strlen($_SESSION['alogin']) == 0) {
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+        
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     </head>
 
 </head>
@@ -31,8 +43,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 <?php include('includes/sidebar.php');?>
 
 
-
-            <div id="layoutSidenav_content">
+            <div id="layoutSidenav_content" id="content-wrapper">
                 <main>
                     <div class="container-fluid px-4">
                    
@@ -44,31 +55,43 @@ if (strlen($_SESSION['alogin']) == 0) {
                             
                             </div>
                               <div class="card-body">
-                                <table id="datatablesSimple">
+                              <table id="dataTable" class="table table-bordered"   width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                         <th>ID</th>
                                            
                                             <th>Appended Date</th>
                                             <th>Details</th>                                           
-                                            
+                                            <th>Status</th> 
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>ID</th>
-                                       
+                                            <th>ID</th>                                       
                                         <th>Appended Date</th>
                                             <th>Details</th>                                          
-                                           
+                                            <th>Status</th> 
                                         </tr>
                                     </tfoot>
                                     <tbody>
                                     <?php
-                                    
-                                    $sql = "SELECT loans.*, users.fname, users.lname from loans INNER JOIN users on users.id=loans.userid and loans.`status`=3";
+                                     $email1 = $_SESSION['login'];
+                                     $sql1 = "SELECT `id` FROM `users` WHERE `email`=:email1";
+                                     $query1 = $dbh->prepare($sql1);
+                                     $query1->bindParam(':email1', $email1, PDO::PARAM_STR);
+                                     $query1->execute();
+                                     $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
+                                     if ($query1->rowCount() > 0) {
+                                         foreach ($results1 as $result1) {
+                                             $uid = $result1->id;
+                                         }
+                                     }
+ 
+                                    $status=3;
+                                    $sql = "SELECT loans.* from loans where loans.userid=:uid and loans.`status`=3 order by loans.id desc";
                                        
                                         $query = $dbh->prepare($sql);
+                                        $query->bindParam(':uid', $uid, PDO::PARAM_STR);
                                         $query->execute();
                                         $results = $query->fetchAll(PDO::FETCH_OBJ);
                                         $cnt = 1;
@@ -77,16 +100,26 @@ if (strlen($_SESSION['alogin']) == 0) {
                                              ?>
 										
                                         <tr>
-                                        <td><?php echo htmlentities($cnt); ?></td>
-                                    
-                                    <td><?php echo htmlentities($result->fname); ?> <?php echo htmlentities($result->lname); ?></td>                                 
+                                        <td><?php echo htmlentities($cnt); ?></td>                                   
+                                                          
                                                                    
                                     <td><?php echo htmlentities($result->created_date); ?></td>
                                     <td>
                                         <p><span style="color:green; font-size:15px;"><?php echo htmlentities($result->amount); ?> Shillings</span>
-                                   <small><?php echo htmlentities($result->loan_plan); ?>
-                                </small><span style="color:red; font-size:15px;">months</span> </p> </td>
-                               
+                                  </p> </td>
+                                  <td class="text-center">
+
+                                        <?php if($result->status == 0): ?>
+						 			<span class="badge badge-warning">Approved and Active</span>
+						 		<?php elseif($result->status == 1): ?>
+						 			<span class="badge badge-info">Waiting Approval</span>
+					 			<?php elseif($result->status == 2): ?>
+						 			<span class="badge badge-primary">Cleared</span>
+					 			<?php elseif($result->status == 3): ?>
+						 			<span class="badge badge-success">Disapproved</span>					 			
+						 		<?php endif; ?>
+
+                                        </td>
    
     
                                         </tr>
@@ -107,6 +140,23 @@ if (strlen($_SESSION['alogin']) == 0) {
         <script src="js/scripts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
+        
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
     </body>
 </html>
 <?php } ?>

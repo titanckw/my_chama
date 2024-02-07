@@ -2,7 +2,7 @@
 session_start();
 include('includes/config.php');
 if (!empty($_SESSION['login'])) {
-    header("location: dashboard.php");
+    header("location: index.php");
 } else {
     if (isset($_POST['login'])) {
         $email = $_POST['email'];

@@ -21,6 +21,16 @@ header('location: login.php');
 <link href="css/styles.css" rel="stylesheet" />
 <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 
+
+        <!-- Custom fonts for this template-->
+        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+              rel="stylesheet">
+              
+
+        <!-- Custom styles for this template-->
+        <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
 </head>
 <body class="sb-nav-fixed">
 <div id="layoutSidenav">
@@ -37,28 +47,40 @@ header('location: login.php');
 
 <h1 class="mt-4">Dashboard</h1>
 
-
-<?php
-$sql = "SELECT SUM(amount) as total from savings where status=0";
-$result = $con->query($sql);
-while($row = mysqli_fetch_array($result)){
-echo '  
+<?php  
+                                     $email1 = $_SESSION['login'];
+                                     $sql1 = "SELECT `id` FROM `users` WHERE `email`=:email1";
+                                     $query1 = $dbh->prepare($sql1);
+                                     $query1->bindParam(':email1', $email1, PDO::PARAM_STR);
+                                     $query1->execute();
+                                     $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
+                                     if ($query1->rowCount() > 0) {
+                                         foreach ($results1 as $result1) {
+                                             $uid = $result1->id;
+                                         }
+                                     }
+ 
+                                     $sql = "SELECT sum(amount) from savings where savings.userid=:uid and savings.status=:status order by savings.id desc";
+                                       
+                                     $query = $dbh->prepare($sql);
+                                     $query->bindParam(':uid', $uid, PDO::PARAM_STR);
+                                     $query->bindParam(':status', $status, PDO::PARAM_STR);
+                                     $query->execute();
+                                     $total = $query->fetch(PDO::FETCH_NUM);{
+                                         echo '
+                                    
 <div class="row">
 <div class="col-xl-3 col-md-6">
 <div class="card bg-primary text-white mb-4">
-<div class="card-body">Active Savings</div>
+<div class="card-body">Personal Savings</div>
 <div class="card-footer d-flex align-items-center justify-content-between">
-<a class="small text-white stretched-link" href="active-savings.php">KSH.'.$row['total'].'  </a>
+<a class="small text-dark stretched-link" href="active-savings.php"> '.$total[0].' </a>
 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
 </div>
 </div>
 </div>
-'; 
 
-}
-//$con->close();
-?>
-
+';}?>
 <?php
 $email1 = $_SESSION['login'];
 $sql1 = "SELECT `id` FROM `users` WHERE `email`=:email1";
@@ -81,16 +103,44 @@ $query->execute();
 $results = $query->fetchAll(PDO::FETCH_OBJ);
 $activeloans = $query->rowCount();
 ?>
-
-
-
-
-
 <div class="col-xl-3 col-md-6">
 <div class="card bg-primary text-white mb-4">
 <div class="card-body">My Active Loans</div>
 <div class="card-footer d-flex align-items-center justify-content-between">
-<a class="small text-white stretched-link" href="active-loans.php"><?php echo htmlentities($activeloans); ?></a>
+<a class="small text-dark stretched-link" href="active-loans.php"><?php echo htmlentities($activeloans); ?></a>
+<div class="small text-white"><i class="fas fa-angle-right"></i></div>
+</div>
+</div>
+</div>
+
+
+<?php
+$email1 = $_SESSION['login'];
+$sql1 = "SELECT `id` FROM `users` WHERE `email`=:email1";
+$query1 = $dbh->prepare($sql1);
+$query1->bindParam(':email1', $email1, PDO::PARAM_STR);
+$query1->execute();
+$results1 = $query1->fetchAll(PDO::FETCH_OBJ);
+if ($query1->rowCount() > 0) {
+foreach ($results1 as $result1) {
+$uid = $result1->id;
+}
+}
+
+$status = 0;
+$sql = "SELECT * FROM payments WHERE  payments.status=:status and payments.userid=:uid  ";
+$query = $dbh->prepare($sql);
+$query->bindParam(':uid', $uid, PDO::PARAM_STR);
+$query->bindParam(':status', $status, PDO::PARAM_STR);
+$query->execute();
+$results = $query->fetchAll(PDO::FETCH_OBJ);
+$activeloans = $query->rowCount();
+?>
+<div class="col-xl-3 col-md-6">
+<div class="card bg-primary text-white mb-4">
+<div class="card-body">Personal Contributions</div>
+<div class="card-footer d-flex align-items-center justify-content-between">
+<a class="small text-dark stretched-link" href="manage-contributions.php"><?php echo htmlentities($activeloans); ?></a>
 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
 </div>
 </div>
@@ -123,7 +173,7 @@ $paidloans = $query->rowCount();
 <div class="card bg-warning text-white mb-4">
 <div class="card-body">Paid Loans History</div>
 <div class="card-footer d-flex align-items-center justify-content-between">
-<a class="small text-white stretched-link" href="cleared-loans.php"><?php echo htmlentities($paidloans); ?></a>
+<a class="small text-dark stretched-link" href="cleared-loans.php"><?php echo htmlentities($paidloans); ?></a>
 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
 </div>
 </div>
@@ -157,7 +207,7 @@ $paidloans = $query->rowCount();
 <div class="card bg-danger text-white mb-4">
 <div class="card-body">Pending Loans</div>
 <div class="card-footer d-flex align-items-center justify-content-between">
-<a class="small text-white stretched-link" href="appended-loans.php"><?php echo htmlentities($paidloans); ?></a>
+<a class="small text-dark stretched-link" href="appended-loans.php"><?php echo htmlentities($paidloans); ?></a>
 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
 </div>
 </div>
@@ -176,6 +226,27 @@ $paidloans = $query->rowCount();
 <script src="assets/demo/chart-bar-demo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
 <script src="js/datatables-simple-demo.js"></script>
+
+
+
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
+
+        <!-- Page level plugins -->
+        <script src="vendor/chart.js/Chart.min.js"></script>
+
+        <!-- Page level custom scripts -->
+        <script src="js/demo/chart-area-demo.js"></script>
+        <script src="js/demo/chart-pie-demo.js"></script>
+        
+
 </body>
 </html>
 <?php }?>

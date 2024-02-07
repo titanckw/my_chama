@@ -8,15 +8,16 @@ if (strlen($_SESSION['alogin']) == 0) {
     if (isset($_POST['submit'])) {
 
         $refno = $_POST['refno'];
-        $amount= $_POST['amount'];        
-        $loan_plan=$_POST['loan_plan'];        
+        $amount= $_POST['amount'];   
+        $due_date= $_POST['due_date'];     
+               
         $id = intval($_GET['id']);
 
-        $sql = "UPDATE `loans` SET refno=:refno,amount=:amount,loan_plan=:loan_plan WHERE id=:id ";
+        $sql = "UPDATE `loans` SET refno=:refno,amount=:amount,due_date=:due_date WHERE id=:id ";
         $query = $dbh->prepare($sql);
         $query->bindParam(':refno', $refno, PDO::PARAM_STR);
         $query->bindParam(':amount', $amount, PDO::PARAM_STR);
-        $query->bindParam(':loan_plan', $loan_plan, PDO::PARAM_STR);
+        $query->bindParam(':due_date', $due_date, PDO::PARAM_STR);
         $query->bindParam(':id', $id, PDO::PARAM_STR);
         $query->execute();
 
@@ -37,6 +38,15 @@ if (strlen($_SESSION['alogin']) == 0) {
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 
 
+
+        <!-- Custom fonts for this template-->
+        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+              rel="stylesheet">
+              
+
+        <!-- Custom styles for this template-->
+        <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
     </head>
     <body class="sb-nav-fixed">
@@ -90,8 +100,8 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
-                                                        <input class="form-control" min="1" max="8" required type="number" value="<?php echo htmlentities($result->loan_plan);}}?>" name="loan_plan" />
-                                                        <label for="inputPassword">Loan Plan <span class="required">months</span></label>
+                                                        <input class="form-control"  required="true" type="date" value="<?php echo htmlentities($result->due_date);}}?>" name="due_date" />
+                                                        <label for="inputPassword">Due Date <span class="required">months</span></label>
                                                     </div>
                                                 </div></div>
 
@@ -108,6 +118,24 @@ if (strlen($_SESSION['alogin']) == 0) {
                 </main>
             </div>
         </div>
+        
+
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
+
+        <!-- Page level plugins -->
+        <script src="vendor/chart.js/Chart.min.js"></script>
+
+        <!-- Page level custom scripts -->
+        <script src="js/demo/chart-area-demo.js"></script>
+        <script src="js/demo/chart-pie-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>

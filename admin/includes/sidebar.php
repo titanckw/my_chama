@@ -26,9 +26,10 @@
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-user-group"></i></div>
                                 Membership
                             </a>
-                            <a class="nav-link" href="manage-interest.php">
+                            
+                            <a class="nav-link" href="manage-plan.php">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-list-check"></i></div>
-                                Interest Plans
+                            Manage Loan Types
                             </a>
 
                              

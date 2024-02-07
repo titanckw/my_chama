@@ -1,17 +1,38 @@
 
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="#"><span class='mlm'>Online Now</span> <i class="fa fa-circle" aria-hidden="true" style="color:#0eaf02"></i> </a>
+
+            <a class="navbar-brand ps-3" href="#">Chama Application </a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
-            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                <div class="input-group">
 
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                    <?php
+            
+            
+    <!-- Topbar Navbar -->
+    <ul class="navbar-nav ml-auto">
+
+<!-- Nav Item - Search Dropdown (Visible Only XS) -->
+<li class="nav-item dropdown no-arrow d-sm-none">
+    <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       
+    </a>
+    
+    
+</li>
+
+<div class="topbar-divider d-none d-sm-block"></div>
+
+<!-- Nav Item - User Information -->
+<li class="nav-item dropdown no-arrow">
+    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <!-- showing username at header -->
+        <span class="mr-2 d-none d-lg-inline text-red-600 large">
+        <?php
                     $email = $_SESSION['alogin'];
-                    $sql2 = "SELECT `username` FROM `admin` WHERE `email`=:email;";
+                    $sql2 = "SELECT * FROM `admin` WHERE `email`=:email;";
                     $query = $dbh->prepare($sql2);
                     $query->bindParam(':email', $email, PDO::PARAM_STR);
                     $query->execute();
@@ -19,14 +40,34 @@
 
                     if ($query->rowCount() > 0) {
                         foreach ($results as $result) {
-                          
-                        
+                            echo $result->username;
+                        }
                     
                     ?></span>
-                    <input class="form-control" type="text"   readonly value="<?php echo $result->username; }}?> " />
-                   
-                </div>
-                
-           
-            </form>
+            
+                 
+                 <img   src="photo/<?php echo ($result->profilepic);}?>" class="img-profile rounded-circle" style="width:50px" alt="Cinque Terre">
+
+        </a>
+    <!-- Dropdown - User Information -->
+    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+         aria-labelledby="userDropdown">
+        <a class="dropdown-item" href="update-profile.php">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            Profile
+        </a>
+        <a class="dropdown-item" href="update-password.php">
+            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+            Update Password
+        </a>
+      
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="logout.php">
+            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+            Logout
+        </a>
+    </div>
+</li>
+
+</ul>
         </nav>

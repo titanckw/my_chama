@@ -5,24 +5,35 @@ include('includes/config.php');
 if (strlen($_SESSION['alogin']) == 0) {
 header('location: login.php');
 } else
-include('db.php'); {
+include('db.php');
+ {
 if (isset($_POST['submit'])) {
 $userid=$_POST['userid'];
-//$fname = $_POST['fname'];
+$type = $_POST['type'];
 $amount = $_POST['amount'];
-$loan_plan=$_POST['loan_plan'];    
-//$contact = $_POST['contact'];
-$date=$_POST['created_date'];
-$status=0;
-$query=mysqli_query($con, "INSERT INTO loans (userid,loan_plan,amount,created_date,status) VALUES('$userid','$loan_plan','$amount',now(),'$status')");
+$status= 0;
 
-if ($query) {
-echo "<script>alert('Loan Application successfull.');</script>";
-echo "<script type='text/javascript'> document.location ='manage-loans.php'; </script>";
-} else{
-echo "<script>alert('Something Went Wrong. Please try again');</script>";
-}}}
+$refno = $_POST['refno'];
+$due_date = $_POST['due_date'];
+$sql = "INSERT INTO loans(userid,refno,due_date,type,amount,status) VALUES(:userid,:refno,:due_date,:type,:amount,:status)";
+$query = $dbh->prepare($sql);
+$query->bindParam(':userid', $userid, PDO::PARAM_STR);
+$query->bindParam(':amount', $amount, PDO::PARAM_STR);
+$query->bindParam(':type', $type, PDO::PARAM_STR);
+$query->bindParam(':refno', $refno, PDO::PARAM_STR);
+$query->bindParam(':due_date', $due_date, PDO::PARAM_STR); 
+$query->bindParam(':status', $status, PDO::PARAM_STR);
 
+$query->execute();
+$lastInsertId = $dbh->lastInsertId();
+if ($lastInsertId) {
+    echo "<script>alert('Loan Application and approval successfull');document.location = 'active-loans.php';</script>";
+} else {
+    echo "<script>alert('Something went wrong')</script>";
+}
+}
+
+ }
 ?>
 
 <!DOCTYPE html>
@@ -38,6 +49,16 @@ echo "<script>alert('Something Went Wrong. Please try again');</script>";
 <link href="css/styles.css" rel="stylesheet" />
 <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 
 </head>
@@ -63,7 +84,7 @@ echo "<script>alert('Something Went Wrong. Please try again');</script>";
 <div class="row mb-3">
 <div class="col-md-6">
 <div class="form-floating mb-3 mb-md-0">
-<select  name="userid" required>
+<select  class="form-control" name="userid" required="true">
 <option value="">Select Member </option>
 <?php $ret="select id, fname,lname from users";
 $query= $dbh -> prepare($ret);
@@ -74,7 +95,7 @@ if($query -> rowCount() > 0)
 foreach($results as $result)
 {
 ?>
-<option value="<?php echo htmlentities($result->id);?>"><?php echo htmlentities($result->fname);?><?php echo htmlentities($result->lname);?></option>
+<option value="<?php echo htmlentities($result->id);?>"><?php echo htmlentities($result->fname);?> <?php echo htmlentities($result->lname);?></option>
 <?php }} ?>
 
 </select>            
@@ -82,18 +103,8 @@ foreach($results as $result)
 </div>
 <div class="col-md-6">
 <div class="form-floating">
-<input type="number" name="amount" min="100" max="6000" required 
-class="form-control" id="inputLastName" />
-<label><span class="required">Amount</span</label>
-</div>
-</div>
-</div>
-<div class="row mb-3">
-<div class="col-md-6">
-<div class="form-floating mb-3 mb-md-0">
-
-<select  name="loan_plan" required>
-<option value="">Select Loan  Plan </option>
+<select class="form-control" name="type" required="true" id="category-dropdown">
+<option value=""> Select Loan Type </option>
 <?php $ret="select * from plans";
 $query= $dbh -> prepare($ret);
 $query-> execute();
@@ -103,21 +114,56 @@ if($query -> rowCount() > 0)
 foreach($results as $result)
 {
 ?>
-<option value="<?php echo htmlentities($result->id);?>"><?php echo htmlentities($result->months);?></option>
+<option value="<?php echo htmlentities($result->id);?>"><?php echo htmlentities($result->type);?></option>
 <?php }} ?>
-
 </select>
+<label for="inputFirstName">Loan Type</label>
+</div>
+</div>
+</div>
+<div class="row mb-3">
+<div class="col-md-6">
+<div class="form-floating mb-3 mb-md-0">
 
+<select class="form-control" id="sub-category-dropdown">
+<option value="">Read Terms and Apply Loan</option>
+</select>
+<label for="inputLastName">Loan Terms</label>
 </div>
 </div>
 <div class="col-md-6">
 <div class="form-floating mb-3 mb-md-0">
-<input type="date" name="created_date" required   class="form-control"   />
+<input type="number" name="amount" required="true" min="100" max="5000" step="0.01" class="form-control"   />
+<label for="inputPasswordConfirm">Amount</label>
+</div>
+</div>
+</div>
 
-<label for="inputPasswordConfirm">APP Date</label>
+
+<div class="row mb-3">
+<div class="col-md-6">
+<div class="form-floating mb-3 mb-md-0">
+<input type="text" name="refno" class="form-control" required="true" >
+<label for="inputLastName">REFNO</label>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="form-floating mb-3 mb-md-0">
+
+<input type="date" name="due_date" class="form-control" required="true">
+<label for="inputLastName"><b>Due Date</b></label>
 </div>
 </div>
 </div>
+
+<div class="col-md-6">
+<div class="form-group checkbox">
+                  <input type="checkbox" id="terms_agree" required="required" checked="">
+                  <label for="terms_agree">Member Agreed with <a href="#">Terms and Conditions</a></label>
+                </div>
+</div>
+
 <div class="mt-4 mb-0">
 <div class="d-grid"><input type="submit" name="submit" class="btn btn-primary btn-block"></a></div>
 </div>
@@ -132,6 +178,16 @@ foreach($results as $result)
 
 </div>
 </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="js/scripts.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
@@ -139,5 +195,26 @@ foreach($results as $result)
 <script src="assets/demo/chart-bar-demo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
 <script src="js/datatables-simple-demo.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"  crossorigin="anonymous"></script>
+<script>
+$(document).ready(function() {
+$('#category-dropdown').on('change', function() {
+var category_id = this.value;
+$.ajax({
+url: "get-cat.php",
+type: "POST",
+data: {
+category_id: category_id
+},
+cache: false,
+success: function(result) {
+$("#sub-category-dropdown").html(result);
+}
+});
+});
+});
+</script>
+
 </body>
 </html>

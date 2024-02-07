@@ -21,6 +21,15 @@ if (strlen($_SESSION['alogin']) == 0) {
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 
+
+        <!-- Custom fonts for this template-->
+        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+              rel="stylesheet">
+              
+
+        <!-- Custom styles for this template-->
+        <link href="css/sb-admin-2.min.css" rel="stylesheet">
 </head>
 <body class="sb-nav-fixed">
     <div id="layoutSidenav">
@@ -48,7 +57,7 @@ while($row = mysqli_fetch_array($result)){
             <div class="card bg-primary text-white mb-4">
                 <div class="card-body">Active Savings</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="active-savings.php">KSH.'.$row['total'].'  </a>
+                    <a class="small text-dark stretched-link" href="active-savings.php">KSH.'.$row['total'].'  </a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
@@ -74,7 +83,7 @@ while($row = mysqli_fetch_array($result)){
                                 <div class="card bg-danger text-white mb-4">
                                     <div class="card-body">Appended Loans</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="appended-loans.php"><?php echo htmlentities($appendedloans); ?></a>
+                                        <a class="small text-dark stretched-link" href="appended-loans.php"><?php echo htmlentities($appendedloans); ?></a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -92,7 +101,7 @@ while($row = mysqli_fetch_array($result)){
                                 <div class="card bg-primary text-white mb-4">
                                     <div class="card-body">Active Loans</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="active-loans.php"><?php echo htmlentities($regusers); ?></a>
+                                        <a class="small text-dark stretched-link" href="active-loans.php"><?php echo htmlentities($regusers); ?></a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -110,7 +119,7 @@ while($row = mysqli_fetch_array($result)){
                                 <div class="card bg-warning text-white mb-4">
                                     <div class="card-body">Paid Loans(<?php echo htmlentities($regusers); ?>)</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="cleared-loans.php">View Details</a>
+                                        <a class="small text-dark stretched-link" href="cleared-loans.php">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -130,7 +139,7 @@ while($row = mysqli_fetch_array($result)){
                                 <div class="card bg-info text-white mb-4">
                                     <div class="card-body">Approved Payments</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="approved-payments.php"> <?php echo htmlentities($paid); ?></a>
+                                        <a class="small text-dark stretched-link" href="approved-payments.php"> <?php echo htmlentities($paid); ?></a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -149,6 +158,25 @@ while($row = mysqli_fetch_array($result)){
         <script src="assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
+
+        
+
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
+
+        <!-- Page level plugins -->
+        <script src="vendor/chart.js/Chart.min.js"></script>
+
+        <!-- Page level custom scripts -->
+        <script src="js/demo/chart-area-demo.js"></script>
+        <script src="js/demo/chart-pie-demo.js"></script>
     </body>
 </html>
 <?php }?>

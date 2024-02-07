@@ -33,6 +33,17 @@ if (strlen($_SESSION['alogin']) == 0) {
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+         
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     </head>
 
 </head>
@@ -43,9 +54,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 <?php include('includes/sidebar.php');?>
 
-
-
-            <div id="layoutSidenav_content">
+<div id="layoutSidenav_content" id="content-wrapper">
                 <main>
                     <div class="container-fluid px-4">
                    
@@ -57,14 +66,14 @@ if (strlen($_SESSION['alogin']) == 0) {
                             
                             </div>
                               <div class="card-body">
-                                <table id="datatablesSimple">
+                              <table id="dataTable" class="table table-bordered"   width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                         <th>ID</th>
                                             <th>Member</th>
-                                            <th>Approved Date</th>
+                                            <th>Appended Date</th>
                                             <th>Details</th>                                           
-                                            <th>REFNo</th>
+                                            <th>Status</th>
                                              <th>Action</th>
                                         </tr>
                                     </thead>
@@ -72,16 +81,16 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         <tr>
                                             <th>ID</th>
                                         <th>Member</th>
-                                        <th>Approved Date</th>
+                                        <th>Appended Date</th>
                                             <th>Details</th>                                          
-                                            <th>REFNo</th>
+                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
                                     <?php
                                     
-                                    $sql = "SELECT loans.*, users.fname, users.lname from loans INNER JOIN users on users.id=loans.userid and loans.`status`=3";
+                                    $sql = "SELECT loans.*, plans.type, users.fname, users.lname from loans INNER JOIN plans on plans.id=loans.type inner join users on users.id=loans.userid and loans.`status`=3";
                                        
                                         $query = $dbh->prepare($sql);
                                         $query->execute();
@@ -98,12 +107,22 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                                    
                                     <td><?php echo htmlentities($result->created_date); ?></td>
                                     <td>
-                                        <p><span style="color:green; font-size:15px;"><?php echo htmlentities($result->amount); ?> Shillings</span>
-                                   <small><?php echo htmlentities($result->loan_plan); ?>
-                                </small><span style="color:red; font-size:15px;">months</span> </p> </td>
-                                <td><?php echo htmlentities($result->refno); ?></td>
+                                        <p><span style="color:green; font-size:15px;"><?php echo htmlentities($result->amount);?> Shillings</span>,
+                                <span style="color:red; font-size:15px;"><?php echo htmlentities($result->type); ?> </span> </p> </td>
+                                <td class="text-center">
+
+                                        <?php if($result->status == 0): ?>
+						 			<span class="badge badge-warning">Approved and Active</span>
+						 		<?php elseif($result->status == 1): ?>
+						 			<span class="badge badge-info">Waiting Approval</span>
+					 			<?php elseif($result->status == 2): ?>
+						 			<span class="badge badge-primary">Cleared</span>
+					 			<?php elseif($result->status == 3): ?>
+						 			<span class="badge badge-success">Disapproved</span>					 			
+						 		<?php endif; ?>
+
+                                        </td>
     <td>
-    <a href="edit-appendedloans.php?id=<?php echo $result->id;?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;        
     <a href="appended-loans.php?uaid=<?php echo $result->id; ?>"
                                                            onclick="return confirm('Do you want to approve this loan?');">Approve</a>
                                 </td>
@@ -123,6 +142,23 @@ if (strlen($_SESSION['alogin']) == 0) {
 
             </div>
         </div>
+        
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
