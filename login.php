@@ -32,6 +32,7 @@ if (!empty($_SESSION['login'])) {
         <meta name="author" content="" />
         <title>SMS</title>
         <link href="css/styles.css" rel="stylesheet" />
+        <link href="css/login-styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 
 

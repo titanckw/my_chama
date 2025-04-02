@@ -8,7 +8,7 @@ For this project, you need to install the **XAMPP** server.
 2. Locate where your XAMPP installation files are stored: `C:\xampp\htdocs`
 3. Copy the extracted folder into `C:\xampp\htdocs`
 4. Open XAMPP server and run both **Apache** & **MySQL**
-5. Open your browser and type: `localhost/my_chama`
+5. Open your browser and type: `localhost/chama`
 
 ## Login Credentials
 
