@@ -1,20 +1,16 @@
-<!DOCTYPE html>
-<html>
-<body>
+# My Chama App
 
-<h1> My Chama App </h1>
+## Requirements for Installation
 
-<h2>Requirements for installation.</h2>
+For this project, you need to install the **XAMPP** server.
 
-<p> For this project, you need to install the *XAMPP* server. </p>
-<p> After it's installed, download the zip file from my Github and extract it in a folder with the name of your choice (mine was my_chama)</p>
-<p> Locate where your xampp installation files [ C:\xampp\htdocs ] </p>
-<p> Copy the the folder you extracted into [ C:\xampp\htdocs ] </p>
-<p> Open XAMPP server and run both Apache & MySQL </p>
-<p> Open your browser and type; [ localhost/my_chama ] </p>
+1. After it's installed, download the zip file from my GitHub and extract it into a folder with the name of your choice (mine was `my_chama`).
+2. Locate where your XAMPP installation files are stored: `C:\xampp\htdocs`
+3. Copy the extracted folder into `C:\xampp\htdocs`
+4. Open XAMPP server and run both **Apache** & **MySQL**
+5. Open your browser and type: `localhost/my_chama`
 
-<h3> Login credentials </h3>
-<p> username: admin@gmail.com</p> <p> password: 12345678 </p>
+## Login Credentials
 
-</body>
-</html>
+- **Username:** `admin@gmail.com`
+- **Password:** `12345678`
